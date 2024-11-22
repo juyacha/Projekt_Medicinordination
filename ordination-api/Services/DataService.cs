@@ -143,9 +143,29 @@ public class DataService
         return null!;
     }
 
-    public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] doser, DateTime startDato, DateTime slutDato) {
-        // TODO: Implement!
-        return null!;
+    public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] doser, DateTime startDato, DateTime slutDato)
+    {
+        // Find patienten
+        var patient = db.Patienter.Include(p => p.ordinationer).FirstOrDefault(p => p.PatientId == patientId);
+        if (patient == null)
+            throw new ArgumentException($"Patient med ID {patientId} blev ikke fundet.");
+
+        // Find lægemidlet
+        var laegemiddel = db.Laegemiddler.FirstOrDefault(l => l.LaegemiddelId == laegemiddelId);
+        if (laegemiddel == null)
+            throw new ArgumentException($"Lægemiddel med ID {laegemiddelId} blev ikke fundet.");
+
+        // Opret ny DagligSkæv-ordination
+        var nyOrdination = new DagligSkæv(startDato, slutDato, laegemiddel, doser);
+
+        // Tilføj ordinationen til patienten
+        patient.ordinationer.Add(nyOrdination);
+
+        // Gem ændringer i databasen
+        db.SaveChanges();
+
+        // Returner den oprettede ordination
+        return nyOrdination;
     }
 
     public string AnvendOrdination(int id, Dato dato) {
