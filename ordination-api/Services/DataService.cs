@@ -135,13 +135,31 @@ public class DataService
         return null!;
     }
 
-    public DagligFast OpretDagligFast(int patientId, int laegemiddelId, 
-        double antalMorgen, double antalMiddag, double antalAften, double antalNat, 
-        DateTime startDato, DateTime slutDato) {
+    public DagligFast OpretDagligFast(int patientId, int laegemiddelId,
+    double antalMorgen, double antalMiddag, double antalAften, double antalNat,
+    DateTime startDato, DateTime slutDato)
+    {
+        // Find the patient by PatientId
+        var patient = db.Patienter.FirstOrDefault(p => p.PatientId == patientId);
+        if (patient == null) throw new ArgumentException("Invalid patientId");
 
-        // TODO: Implement!
-        return null!;
+        // Find the laegemiddel by LaegemiddelId
+        var laegemiddel = db.Laegemiddler.FirstOrDefault(l => l.LaegemiddelId == laegemiddelId);
+        if (laegemiddel == null) throw new ArgumentException("Invalid laegemiddelId");
+
+        // Create a new DagligFast instance
+        var dagligFast = new DagligFast(startDato, slutDato, laegemiddel, antalMorgen, antalMiddag, antalAften, antalNat);
+
+        // Add the new ordination to the patient
+        patient.ordinationer.Add(dagligFast);
+
+        // Add the new DagligFast to the database context and save
+        db.Ordinationer.Add(dagligFast);
+        db.SaveChanges();
+
+        return dagligFast;
     }
+
 
     public DagligSkæv OpretDagligSkaev(int patientId, int laegemiddelId, Dosis[] doser, DateTime startDato, DateTime slutDato) {
         // TODO: Implement!
