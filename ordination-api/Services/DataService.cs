@@ -130,10 +130,37 @@ public class DataService
         return db.Laegemiddler.ToList();
     }
 
-    public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato) {
+    /*public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato) {
         // TODO: Implement!
         return null!;
+    }*/
+
+    public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato)
+    {
+        //Step 1:
+        // Find the patient by PatientId
+        var patient = db.Patienter.FirstOrDefault(p => p.PatientId == patientId);
+        if (patient == null) throw new ArgumentException("Invalid patientId");
+
+        // Find the laegemiddel by LaegemiddelId
+        var laegemiddel = db.Laegemiddler.FirstOrDefault(l => l.LaegemiddelId == laegemiddelId);
+        if (laegemiddel == null) throw new ArgumentException("Invalid laegemiddelId");
+
+        // Step 2: Create the PN object using the constructor
+        PN pn = new PN(startDato, slutDato, antal, laegemiddel);
+
+        // Step 3: Add the PN object to the patient's list of ordinations
+        patient.ordinationer.Add(pn);
+
+        //Step 4:
+        // Add the new DagligFast to the database context and save
+        db.Ordinationer.Add(pn);
+        db.SaveChanges();
+
+        // Step 5: Return the newly created PN object
+        return pn;
     }
+
 
     public DagligFast OpretDagligFast(int patientId, int laegemiddelId,
     double antalMorgen, double antalMiddag, double antalAften, double antalNat,
