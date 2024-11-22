@@ -13,7 +13,7 @@ public class DagligFast : Ordination {
         MiddagDosis = new Dosis(CreateTimeOnly(12, 0, 0), middagAntal);
         AftenDosis = new Dosis(CreateTimeOnly(18, 0, 0), aftenAntal);
         NatDosis = new Dosis(CreateTimeOnly(23, 59, 0), natAntal);
-	}
+	} 
 
     public DagligFast() : base(null!, new DateTime(), new DateTime()) {
     }
