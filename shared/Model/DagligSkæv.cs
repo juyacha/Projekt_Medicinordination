@@ -22,7 +22,7 @@ public class DagligSkæv : Ordination {
 	}
 
 	public override double doegnDosis() {
-        // TODO: Implement!
+        
         return doser.Sum(d => d.antal);
         
 	}

@@ -34,22 +34,16 @@ public class PN : Ordination {
     }
 
 
-    /*public override double doegnDosis() {
-    	// TODO: Implement!
-        return -1;
-    }*/
+   
     public override double doegnDosis()
     {
-        // Since PN doesn't have a fixed daily dose, we return a placeholder value
-        // You could also implement logic to calculate a daily average dose if needed
+        // (antal gange ordinationen er anvendt * antal enheder) /
+        // (antal dage mellem første og sidste givning)
+        //implementer det!!
+        
         return -1;
     }
 
-
-
-    /*public override double samletDosis() {
-        return dates.Count() * antalEnheder;
-    }*/
     public override double samletDosis()
     {
         // Total dose is the number of times a dose was given (dates.Count) multiplied by the number of units per dose
