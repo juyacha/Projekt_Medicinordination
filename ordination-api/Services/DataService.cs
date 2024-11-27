@@ -288,7 +288,7 @@ public class DataService
             dosisFaktor = laegemiddel.enhedPrKgPrDoegnTung;
         }
 
-        // Beregn den anbefalede dosis per døgn
+        // Beregner den anbefalede dosis per døgn
         double anbefaletDosis = vægt * dosisFaktor;
 
         return anbefaletDosis;
