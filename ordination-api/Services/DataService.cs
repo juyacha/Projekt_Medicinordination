@@ -212,21 +212,87 @@ public class DataService
         return nyOrdination;
     }
 
+    /*
     public string AnvendOrdination(int id, Dato dato) {
         // TODO: Implement!
         return null!;
     }
+    */
+    public string AnvendOrdination(int id, Dato dato)
+    {
+        // Find ordinationen baseret på dens ID
+        var ordination = db.Ordinationer.OfType<PN>().FirstOrDefault(o => o.OrdinationId == id);
+        if (ordination == null)
+        {
+            throw new ArgumentException($"Ordination med ID {id} blev ikke fundet.");
+        }
+
+        // Forsøg at give dosis på den angivne dato
+        bool dosisGivet = ((PN)ordination).givDosis(dato);
+        if (dosisGivet)
+        {
+            db.SaveChanges();
+            return "Ordinationen blev anvendt.";
+        }
+        else
+        {
+            return "Ordinationen kan ikke anvendes på denne dato.";
+        }
+    }
+
+
 
     /// <summary>
     /// Den anbefalede dosis for den pågældende patient, per døgn, hvor der skal tages hensyn til
-	/// patientens vægt. Enheden afhænger af lægemidlet. Patient og lægemiddel må ikke være null.
+    /// patientens vægt. Enheden afhænger af lægemidlet. Patient og lægemiddel må ikke være null.
     /// </summary>
     /// <param name="patient"></param>
     /// <param name="laegemiddel"></param>
     /// <returns></returns>
-	public double GetAnbefaletDosisPerDøgn(int patientId, int laegemiddelId) {
+
+    /*
+    public double GetAnbefaletDosisPerDøgn(int patientId, int laegemiddelId) {
         // TODO: Implement!
         return -1;
 	}
-    
+    */
+    public double GetAnbefaletDosisPerDøgn(int patientId, int laegemiddelId)
+    {
+        var patient = db.Patienter.FirstOrDefault(p => p.PatientId == patientId);
+        if (patient == null)
+        {
+            throw new ArgumentException($"Patient med ID {patientId} blev ikke fundet.");
+        }
+
+        var laegemiddel = db.Laegemiddler.FirstOrDefault(l => l.LaegemiddelId == laegemiddelId);
+        if (laegemiddel == null)
+        {
+            throw new ArgumentException($"Lægemiddel med ID {laegemiddelId} blev ikke fundet.");
+        }
+
+        double vægt = patient.vaegt;
+
+        // Vælg dosisfaktoren afhængigt af patientens vægt
+        double dosisFaktor;
+
+        if (vægt < 25)
+        {
+            dosisFaktor = laegemiddel.enhedPrKgPrDoegnLet;
+        }
+        else if (vægt >= 25 && vægt <= 120)
+        {
+            dosisFaktor = laegemiddel.enhedPrKgPrDoegnNormal;
+        }
+        else
+        {
+            dosisFaktor = laegemiddel.enhedPrKgPrDoegnTung;
+        }
+
+        // Beregn den anbefalede dosis per døgn
+        double anbefaletDosis = vægt * dosisFaktor;
+
+        return anbefaletDosis;
+    }
+
+
 }
