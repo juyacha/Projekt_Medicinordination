@@ -130,10 +130,6 @@ public class DataService
         return db.Laegemiddler.ToList();
     }
 
-    /*public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato) {
-        // TODO: Implement!
-        return null!;
-    }*/
 
     public PN OpretPN(int patientId, int laegemiddelId, double antal, DateTime startDato, DateTime slutDato)
     {
@@ -212,12 +208,7 @@ public class DataService
         return nyOrdination;
     }
 
-    /*
-    public string AnvendOrdination(int id, Dato dato) {
-        // TODO: Implement!
-        return null!;
-    }
-    */
+    
     public string AnvendOrdination(int id, Dato dato)
     {
         // Find ordinationen baseret på dens ID
@@ -250,12 +241,7 @@ public class DataService
     /// <param name="laegemiddel"></param>
     /// <returns></returns>
 
-    /*
-    public double GetAnbefaletDosisPerDøgn(int patientId, int laegemiddelId) {
-        // TODO: Implement!
-        return -1;
-	}
-    */
+   
     public double GetAnbefaletDosisPerDøgn(int patientId, int laegemiddelId)
     {
         var patient = db.Patienter.FirstOrDefault(p => p.PatientId == patientId);
