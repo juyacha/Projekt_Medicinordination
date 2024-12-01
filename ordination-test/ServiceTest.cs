@@ -1,9 +1,8 @@
 namespace ordination_test;
 
-using Microsoft.EntityFrameworkCore;
-
-using Service;
 using Data;
+using Microsoft.EntityFrameworkCore;
+using Service;
 using shared.Model;
 
 [TestClass]
@@ -54,6 +53,30 @@ public class ServiceTest
         Console.WriteLine("Her kommer der ikke en exception. Testen fejler.");
     }
 
+    [TestMethod]
+    public void GetAnbefaletDosisPerDøgn_CorrectCalculation() //Unit test af DataService; happy path
+    {
+        // Arrange
+        var patient = service.GetPatienter().First(); 
+        var laegemiddel = service.GetLaegemidler().First();
 
+        // Act
+        double dosis = service.GetAnbefaletDosisPerDøgn(patient.PatientId, laegemiddel.LaegemiddelId);
+
+        //Assert: Bekræfter, at der returneres en valid dosis
+        Assert.IsTrue(dosis > 0); 
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void GetAnbefaletDosisPerDøgn_InvalidPatientId() //Unit test af DataService; unhappy path
+    {
+        // Arrange
+        int invalidPatientId = -1; // Ugyldigt ID
+        var laegemiddel = service.GetLaegemidler().First();
+
+        // Act
+        service.GetAnbefaletDosisPerDøgn(invalidPatientId, laegemiddel.LaegemiddelId);
+    }
 
 }
