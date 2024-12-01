@@ -22,10 +22,8 @@ public class PN : Ordination {
 
     public bool givDosis(Dato givesDen)
     {
-        // Check if the givesDen is within the valid date range of the ordination
         if (givesDen.dato >= startDen && givesDen.dato <= slutDen)
         {
-            // Add the given date to the list
             dates.Add(givesDen);
             return true;
         }
@@ -36,18 +34,14 @@ public class PN : Ordination {
 
     public override double doegnDosis()
     {
-        // Tjek om der er nogen registrerede datoer
-        if (dates.Count == 0) return 0; // Undgå division med 0
+        if (dates.Count == 0) return 0; 
 
-        // Find minimum og maksimum datoer i listen
         DateTime min = dates.OrderBy(d => d.dato).First().dato.Date;
         DateTime max = dates.OrderBy(d => d.dato).Last().dato.Date;
 
 
-        // Beregn antallet af dage (inklusive begge ender af perioden)
         int dage = (max - min).Days + 1;
 
-        // Beregn den gennemsnitlige dosis per dag
         double sum = samletDosis() / dage;
 
         return sum;
@@ -55,7 +49,6 @@ public class PN : Ordination {
 
     public override double samletDosis()
     {
-        // Total dose is the number of times a dose was given (dates.Count) multiplied by the number of units per dose
         return dates.Count * antalEnheder;
     }
 
